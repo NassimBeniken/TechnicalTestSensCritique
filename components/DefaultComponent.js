@@ -1,25 +1,20 @@
+import React from 'react'
 import Image from "next/image"
-import { gql, useQuery } from "@apollo/client";
+import { getAnime } from "../http/AnilistClient"
 
 export const DefaultComponent = () => {
 
-  const query = gql`
-    query GetAnime {
-      Page {
-        media(type: ANIME) {
-          title {
-            english
-          }
-          bannerImage
-        }
-      }
-    }  
-  `
-  const { loading, error, data } = useQuery(query)
+  
+  const { loading, error, data } = getAnime()
 
   if (loading) return 'Loading...'
   if (error) return `Error! ${error.message}`
-
+  const animes = data.Page.media.map((anime) => <li key={anime.id}>
+    <img src={anime.bannerImage} height={100} width={100}/>
+    {anime.title.english}
+    </li>)
+  //data.Page.media.map((item) => console.log(item.id))
+  //console.log(data.Page.media)
   return (
     <div className={"hello-world"}>
       <Image
@@ -32,6 +27,11 @@ export const DefaultComponent = () => {
       <p>
         Bienvenue sur le test technique SensCritique 🎉
       </p>
+      <div>
+        <ul>
+          {animes}
+        </ul>
+      </div>
       <style jsx>{`
         h1 {
           font-size: 4em;
