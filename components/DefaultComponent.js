@@ -1,6 +1,25 @@
-import Image from "next/image";
+import Image from "next/image"
+import { gql, useQuery } from "@apollo/client";
 
 export const DefaultComponent = () => {
+
+  const query = gql`
+    query GetAnime {
+      Page {
+        media(type: ANIME) {
+          title {
+            english
+          }
+          bannerImage
+        }
+      }
+    }  
+  `
+  const { loading, error, data } = useQuery(query)
+
+  if (loading) return 'Loading...'
+  if (error) return `Error! ${error.message}`
+
   return (
     <div className={"hello-world"}>
       <Image
