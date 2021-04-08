@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { getAnime } from "../http/AnilistClient"
 import Anime from "./Anime"
-//import { MysqlConnection } from "../repository/MysqlConnection"
 
 const AnimeList = () => {
     const [page, setPage] = useState(1)
@@ -11,21 +10,7 @@ const AnimeList = () => {
     if (loading) return 'Loading...'
     if (error) return `Error! ${error.message}`
     
-    const animes = data.Page.media.map(function(anime) {
-        /*const id = anime.id
-        const title = anime.title.english
-        const description = anime.description
-        try {
-            const result = executeQuery({
-                query: "INSERT INTO anime (id, title, description) VALUES(?, ?, ?)",
-                values: [id, title, description]
-            })
-            console.log(result)
-        } catch (an_error) {
-            console.log(an_error)
-        }*/
-        return <li style={styles.li} key={anime.id}><Anime anime={anime}/></li>
-    } )
+    const animes = data.Page.media.map((anime) => <li style={styles.li} key={anime.id}><Anime anime={anime}/></li>)
 
     const handlePreviousButtonClick = () => {
         if(page !== 1) {
@@ -39,16 +24,33 @@ const AnimeList = () => {
         }
     }
 
+    const handleAddToBd = () => {
+        data.Page.media.map((anime) => {
+            const body = { title: "salut", description: "pas salut"}
+            fetch("http://localhost:3000/api/add", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: anime.title.english,
+                    description: anime.description
+                })
+            })
+        })
+    }
+
     return (
         <div>
             <div style={styles.buttonDiv}>
                 <button style={styles.button} onClick={() => handlePreviousButtonClick()}>Page précédente</button>
+                {page}
                 <button style={styles.button} onClick={() => handleNextButtonClick()}>Page suivante</button>
             </div>
             <div>
                 <ul style={styles.ul}>
                     {animes}
                 </ul>
+            </div>
+            <div style={styles.addBd}>
+                <button style={styles.button} onClick={() => handleAddToBd()}>Ajouter à la BD</button>
             </div>
         </div>
     )
@@ -60,7 +62,7 @@ const styles = {
         justifyContent: "space-between"
     },
     button: {
-        height: 30
+        height: 30,
     },
     ul: {
         columnCount: 3,
@@ -71,6 +73,10 @@ const styles = {
     li: {
         display: "inline-block",
         width: "100%"
+    },
+    addBd: {
+        textAlign: "center",
+        marginBottom: 20
     }
 }
 

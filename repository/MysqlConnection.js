@@ -9,11 +9,11 @@ export const MysqlConnection = new Sequelize({
   database: process.env.DATABASE_NAME
 })
 
-/*export const executeQuery = async ({query, values}) => {
+export const executeQuery = async ({query, values}) => {
   try {
     const results = await MysqlConnection.query(query, values)
     return results
   } catch (error) {
     console.log(error)
   }
-}*/
+}
