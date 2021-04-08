@@ -5,10 +5,10 @@ export const AnilistClient = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-export const getAnime = () => {
+export const getAnime = (page, perPage) => {
   const query = gql`
     query GetAnime {
-      Page {
+      Page(page: ${page}, perPage: ${perPage}) {
         media(type: ANIME) {
           id
           title {
