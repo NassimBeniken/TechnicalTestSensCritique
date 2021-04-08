@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { getAnime } from "../http/AnilistClient"
 import Anime from "./Anime"
+//import { MysqlConnection } from "../repository/MysqlConnection"
 
 const AnimeList = () => {
     const [page, setPage] = useState(1)
@@ -10,7 +11,21 @@ const AnimeList = () => {
     if (loading) return 'Loading...'
     if (error) return `Error! ${error.message}`
     
-    const animes = data.Page.media.map((anime) => <li style={styles.li} key={anime.id}><Anime anime={anime}/></li>)
+    const animes = data.Page.media.map(function(anime) {
+        /*const id = anime.id
+        const title = anime.title.english
+        const description = anime.description
+        try {
+            const result = executeQuery({
+                query: "INSERT INTO anime (id, title, description) VALUES(?, ?, ?)",
+                values: [id, title, description]
+            })
+            console.log(result)
+        } catch (an_error) {
+            console.log(an_error)
+        }*/
+        return <li style={styles.li} key={anime.id}><Anime anime={anime}/></li>
+    } )
 
     const handlePreviousButtonClick = () => {
         if(page !== 1) {

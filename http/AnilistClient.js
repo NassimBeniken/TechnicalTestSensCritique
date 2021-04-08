@@ -24,6 +24,7 @@ export const getAnime = (page, perPage) => {
           coverImage {
             large
           }
+          description
         }
       }
     }  

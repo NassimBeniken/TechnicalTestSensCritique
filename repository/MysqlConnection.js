@@ -8,3 +8,12 @@ export const MysqlConnection = new Sequelize({
   port: process.env.DATABASE_PORT,
   database: process.env.DATABASE_NAME
 })
+
+/*export const executeQuery = async ({query, values}) => {
+  try {
+    const results = await MysqlConnection.query(query, values)
+    return results
+  } catch (error) {
+    console.log(error)
+  }
+}*/
