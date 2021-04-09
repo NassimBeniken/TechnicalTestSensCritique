@@ -2,6 +2,7 @@ import requests as r
 import mariadb
 import json
 import os, sys
+import re
 
 """
 Fonction permettant de récupérer l'URL SensCritique d'un animé
@@ -43,4 +44,44 @@ def connect_to_database():
 """
 Ajouter votre logique en dessous ⬇️
 """
-print("Hello world ! 👋🏻")
+
+"""
+Fonction permettant de rechercher la note de l'anime sur le site de SensCritique et de l'ajouter en base
+"""
+def addMarkToDB(title):
+    try:
+        print("Getting the url of " + title + "...")
+        url = get_sc_anime_url(title)
+        res = r.get(url)
+        print("apres url")
+        html = res.text
+        res.close()
+        pattern = "pvi\-scrating\-value\"\>(.*?)\<\/span\>"
+        mark = re.search(pattern, html).group(1)
+        print(mark)
+        print("Adding the SensCritique mark of '" + title + "' in database...")
+        sql = "UPDATE anime SET mark = '" + mark + "' WHERE title = '" + title + "'"
+        cur.execute(sql)
+        connection.commit()
+        print(cur.rowcount, "record(s) affected")
+    except ValueError:
+        print("Error during the process")
+
+"""
+Connexion à la base
+"""
+connection = connect_to_database()
+cur = connection.cursor()
+
+"""
+Récupération de l'ensemble des animes de la base
+"""
+cur.execute(f"SELECT title FROM anime")
+rows = cur.fetchall()
+
+"""
+Ajout des notes de SensCritique aux animes présents dans la base
+"""
+for title in rows:
+    if title[0] != "No title":
+        addMarkToDB(title[0])
