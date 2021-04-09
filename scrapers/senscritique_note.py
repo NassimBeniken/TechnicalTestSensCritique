@@ -53,7 +53,6 @@ def addMarkToDB(title):
         print("Getting the url of " + title + "...")
         url = get_sc_anime_url(title)
         res = r.get(url)
-        print("apres url")
         html = res.text
         res.close()
         pattern = "pvi\-scrating\-value\"\>(.*?)\<\/span\>"
