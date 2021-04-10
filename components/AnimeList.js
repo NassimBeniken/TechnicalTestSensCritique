@@ -26,7 +26,6 @@ const AnimeList = () => {
 
     const handleAddToBd = () => {
         data.Page.media.map((anime) => {
-            const body = { title: "salut", description: "pas salut"}
             fetch("http://localhost:3000/api/add", {
                 method: "POST",
                 body: JSON.stringify({
